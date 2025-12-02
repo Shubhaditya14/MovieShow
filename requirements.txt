@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+sqlalchemy
+alembic
+asyncpg
+pandas
+tqdm
+torch
+numpy
+python-dotenv
+pydantic
+psycopg2-binary
+jinja2
+networkx
+sympy
