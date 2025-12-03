@@ -39,13 +39,13 @@ async def get_recommendations(request: RecommendRequest):
         raise HTTPException(status_code=503, detail="Model not loaded")
 
     # Get raw recommendations (IDs and scores)
+    device = model.item_embedding.weight.device
     recs = recommend(
         model=model,
         vocab=vocab,
+        device=device,
         user_history=request.history,
-        k=request.top_k,
-        user_embeddings=user_embeddings,
-        user_id=request.user_id
+        top_k=request.top_k
     )
     
     # Load movie titles mapping
@@ -67,8 +67,10 @@ async def get_recommendations(request: RecommendRequest):
 
     enriched_recs = []
     
-    for movie_id, score in recs:
-        title = get_recommendations.movie_titles.get(str(movie_id), f"Movie {movie_id}")
+    for rec in recs:
+        movie_id = str(rec['movie_id'])  # Convert to string for lookup
+        score = rec['score']
+        title = get_recommendations.movie_titles.get(movie_id, f"Movie {movie_id}")
         
         # Extract year from title if present "Toy Story (1995)"
         year = None

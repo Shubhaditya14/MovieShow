@@ -201,8 +201,11 @@ def recommend(model, vocab, device, user_history, top_k=20):
     top_scores, top_indices = torch.topk(scores, top_k)
 
     results = []
-    for score, idx in zip(top_scores.tolist(), top_indices.tolist()):
-        movie_id = idx_to_movie[str(idx)]
+    for score, idx_pos in zip(top_scores.tolist(), top_indices.tolist()):
+        # idx_pos is the position in all_item_indices (0, 1, 2...)
+        # actual item index is idx_pos + 1 (since we started at 1)
+        actual_idx = idx_pos + 1
+        movie_id = idx_to_movie[str(actual_idx)]
         results.append({"movie_id": movie_id, "score": score})
 
     return results
