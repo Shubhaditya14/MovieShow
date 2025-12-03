@@ -451,7 +451,6 @@ This project is for educational purposes.
 
 <div align="center">
 
-**Built with ❤️ using AI and Machine Learning**
 
 ⭐ Star this repo if you found it helpful!
 
