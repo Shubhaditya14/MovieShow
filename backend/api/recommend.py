@@ -1,52 +1,40 @@
-# backend/api/recommend.py
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from ml.inference import load_model, recommend
 
-from backend.utils.jwt_handler import get_current_user_id
-from backend.db.database import get_db
-from backend.db.models import Movie
-from backend.ml.embedding_cache import get_user_embedding
+# load once at startup
+model, vocab, device = load_model()
 
-router = APIRouter(prefix="/recommend", tags=["Recommendation"])
+router = APIRouter()
 
 
-# ---------------------------
-# Dummy Recommendation System
-# ---------------------------
-@router.get("/")
-async def recommend_movies(
-    user_id: int = Depends(get_current_user_id),
-    db: AsyncSession = Depends(get_db)
-):
-    # 1. Try to load the cached embedding
-    embedding = await get_user_embedding(user_id)
+class RecommendRequest(BaseModel):
+    user_id: int
+    history: List[str]     # list of movie_ids watched in order
+    top_k: int = 20
 
-    if embedding is None:
-        # no interactions yet
-        raise HTTPException(400, "No user embedding found. Log some movies first.")
 
-    # ---------------------------
-    # DUMMY RECOMMENDATION LOGIC
-    # (Will replace with Transformer later)
-    # ---------------------------
-    # Let's return the first 10 movies in DB
-    result = await db.execute(select(Movie).limit(10))
-    movies = result.scalars().all()
+class RecommendResponse(BaseModel):
+    user_id: int
+    recommendations: List[dict]
 
-    recs = [
-        {
-            "movie_id": m.movie_id,
-            "title": m.title,
-            "poster_url": m.poster_url,
-            "genres": m.genres
-        }
-        for m in movies
-    ]
 
-    return {
-        "user_id": user_id,
-        "recommendations": recs,
-        "note": "DUMMY DATA — will be replaced by ML model"
-    }
+@router.post("/recommend", response_model=RecommendResponse)
+async def recommend_movies(req: RecommendRequest):
+    if len(req.history) == 0:
+        raise HTTPException(400, "User history is empty")
+
+    recs = recommend(
+        model=model,
+        vocab=vocab,
+        device=device,
+        user_history=req.history,
+        top_k=req.top_k
+    )
+
+    return RecommendResponse(
+        user_id=req.user_id,
+        recommendations=recs
+    )

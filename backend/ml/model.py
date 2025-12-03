@@ -13,6 +13,7 @@ class TransformerRecModel(nn.Module):
         max_seq_len: int = 50,
         pad_idx: int = 0,
         dropout: float = 0.1,
+        use_mlp_scorer: bool = False,  # NEW: use MLP instead of dot product
     ):
         """
         num_items: size of item vocabulary (max index + 1)
@@ -21,6 +22,7 @@ class TransformerRecModel(nn.Module):
         n_layers: number of Transformer encoder layers
         max_seq_len: sequence length (we use 50)
         pad_idx: index used for padding tokens
+        use_mlp_scorer: if True, use MLP for scoring instead of dot product
         """
 
         super().__init__()
@@ -28,6 +30,7 @@ class TransformerRecModel(nn.Module):
         self.d_model = d_model
         self.max_seq_len = max_seq_len
         self.pad_idx = pad_idx
+        self.use_mlp_scorer = use_mlp_scorer
 
         # Item embedding table (shared for sequence, taste, and candidates)
         self.item_embedding = nn.Embedding(
@@ -57,9 +60,18 @@ class TransformerRecModel(nn.Module):
         # Optional projection after combining sequence + taste
         self.user_proj = nn.Linear(d_model, d_model)
 
-        # We will use dot product scoring:
-        # score(user, item) = <user_emb, item_emb>
-        # So no extra output head is strictly required.
+        # MLP Ranking Head (optional, more expressive than dot product)
+        if use_mlp_scorer:
+            self.scorer = nn.Sequential(
+                nn.Linear(d_model * 2, d_model),
+                nn.ReLU(),
+                nn.Dropout(dropout),
+                nn.Linear(d_model, 1)
+            )
+        else:
+            self.scorer = None
+            # We will use dot product scoring:
+            # score(user, item) = <user_emb, item_emb>
 
     def forward(
         self,
@@ -129,10 +141,22 @@ class TransformerRecModel(nn.Module):
         # candidate_items: [B, K]
         cand_emb = self.item_embedding(candidate_items)  # [B, K, D]
 
-        # ---- 8. Dot product scoring ----
-        # scores[b, k] = dot(user_emb[b], cand_emb[b, k])
-        # We can do: (B, K, D) · (B, D, 1) -> (B, K, 1) -> (B, K)
-        user_emb_expanded = user_emb.unsqueeze(-1)     # [B, D, 1]
-        scores = torch.bmm(cand_emb, user_emb_expanded).squeeze(-1)  # [B, K]
+        # ---- 8. Scoring ----
+        if self.use_mlp_scorer:
+            # MLP-based scoring (more expressive)
+            # Expand user_emb to match candidates: [B, K, D]
+            user_emb_expanded = user_emb.unsqueeze(1).expand(-1, cand_emb.size(1), -1)
+            
+            # Concatenate user and item embeddings: [B, K, 2*D]
+            combined = torch.cat([user_emb_expanded, cand_emb], dim=-1)
+            
+            # Pass through MLP scorer: [B, K, 1] -> [B, K]
+            scores = self.scorer(combined).squeeze(-1)
+        else:
+            # Dot product scoring (original)
+            # scores[b, k] = dot(user_emb[b], cand_emb[b, k])
+            # We can do: (B, K, D) · (B, D, 1) -> (B, K, 1) -> (B, K)
+            user_emb_expanded = user_emb.unsqueeze(-1)     # [B, D, 1]
+            scores = torch.bmm(cand_emb, user_emb_expanded).squeeze(-1)  # [B, K]
 
         return scores

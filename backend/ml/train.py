@@ -15,7 +15,7 @@ from ml.model import TransformerRecModel
 # Config
 # -----------------------------
 MAX_SEQ_LEN = 50
-BATCH_SIZE = 256
+BATCH_SIZE = 128  # Reduced from 256 to prevent MPS OOM
 NUM_EPOCHS = 3
 NUM_NEGATIVES = 20      # negatives per positive
 LR = 1e-3
@@ -155,35 +155,54 @@ def train():
     model.train()
     for epoch in range(1, NUM_EPOCHS + 1):
         total_loss = 0.0
-        for batch in dataloader:
-            sequence = batch["sequence"].to(device)          # [B, L]
-            attention_mask = batch["attention_mask"].to(device)  # [B, L]
-            taste = batch["taste"].to(device)                # [B, T]
-            candidate_items = batch["candidate_items"].to(device)  # [B, K]
+        for batch_idx, batch in enumerate(dataloader):
+            try:
+                sequence = batch["sequence"].to(device)          # [B, L]
+                attention_mask = batch["attention_mask"].to(device)  # [B, L]
+                taste = batch["taste"].to(device)                # [B, T]
+                candidate_items = batch["candidate_items"].to(device)  # [B, K]
 
-            # Forward: scores for each candidate
-            scores = model(
-                sequence=sequence,
-                attention_mask=attention_mask,
-                taste=taste,
-                candidate_items=candidate_items,
-            )  # [B, K]
+                # Forward: scores for each candidate
+                scores = model(
+                    sequence=sequence,
+                    attention_mask=attention_mask,
+                    taste=taste,
+                    candidate_items=candidate_items,
+                )  # [B, K]
 
-            # Labels: index 0 is always the positive (true) item
-            labels = torch.zeros(scores.size(0), dtype=torch.long, device=device)
+                # Labels: index 0 is always the positive (true) item
+                labels = torch.zeros(scores.size(0), dtype=torch.long, device=device)
 
-            loss = F.cross_entropy(scores, labels)
+                loss = F.cross_entropy(scores, labels)
 
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
-            total_loss += loss.item()
-            global_step += 1
+                total_loss += loss.item()
+                global_step += 1
 
-            if global_step % 100 == 0:
-                avg_loss = total_loss / global_step
-                print(f"Epoch {epoch} | Step {global_step} | Loss: {loss.item():.4f} | Avg: {avg_loss:.4f}")
+                # Clean up to free memory
+                del sequence, attention_mask, taste, candidate_items, scores, labels
+                if device.type == "mps":
+                    torch.mps.empty_cache()
+                elif device.type == "cuda":
+                    torch.cuda.empty_cache()
+
+                if global_step % 100 == 0:
+                    avg_loss = total_loss / global_step
+                    print(f"Epoch {epoch} | Step {global_step} | Loss: {loss.item():.4f} | Avg: {avg_loss:.4f}")
+                    
+            except RuntimeError as e:
+                if "out of memory" in str(e):
+                    print(f"WARNING: OOM at step {global_step}, skipping batch...")
+                    if device.type == "mps":
+                        torch.mps.empty_cache()
+                    elif device.type == "cuda":
+                        torch.cuda.empty_cache()
+                    continue
+                else:
+                    raise e
 
         # Save checkpoint after each epoch
         ckpt_path = CHECKPOINT_DIR / f"transformer_epoch{epoch}.pt"
