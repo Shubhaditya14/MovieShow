@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from backend.api import auth, movies, interactions, recommend, similar, metadata, batch
+from api import auth, movies, interactions, recommend, similar, metadata, batch
 
 app = FastAPI(title="Movie Recommender API")
 

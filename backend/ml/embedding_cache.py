@@ -2,11 +2,11 @@
 
 import os
 import json
-import aioredis
+import redis.asyncio as redis_async
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from backend.db.models import UserMovieEvent
+from db.models import UserMovieEvent
 
 
 # ------------------------------
@@ -14,14 +14,14 @@ from backend.db.models import UserMovieEvent
 # ------------------------------
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 
-redis = None
+redis_client = None
 
 
 async def get_redis():
-    global redis
-    if redis is None:
-        redis = await aioredis.from_url(REDIS_URL, decode_responses=True)
-    return redis
+    global redis_client
+    if redis_client is None:
+        redis_client = await redis_async.from_url(REDIS_URL, decode_responses=True)
+    return redis_client
 
 
 # ------------------------------

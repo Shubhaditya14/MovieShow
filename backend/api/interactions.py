@@ -5,14 +5,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import datetime
 
-from backend.db.database import get_db
-from backend.db.models import User, Movie, UserMovieEvent
-from backend.db.schemas import EventCreate, EventResponse
-from backend.utils.jwt_handler import get_current_user_id
-from backend.services.omdb_service import fetch_movie_from_omdb
+from db.database import get_db
+from db.models import User, Movie, UserMovieEvent
+from db.schemas import EventCreate, EventResponse
+from utils.jwt_handler import get_current_user_id
+from services.omdb_service import fetch_movie_from_omdb
 
 # Redis cache updater (we'll implement it soon)
-from backend.ml.embedding_cache import update_user_embedding_cache
+from ml.embedding_cache import update_user_embedding_cache
 
 
 router = APIRouter(prefix="/interactions", tags=["Interactions"])

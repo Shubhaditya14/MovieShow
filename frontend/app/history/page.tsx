@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import MovieCard from '@/components/MovieCard';
 import { Clock, Calendar, Trash2 } from 'lucide-react';
@@ -17,8 +17,12 @@ interface WatchedMovie {
 }
 
 export default function HistoryPage() {
-    const [history, setHistory] = useState<WatchedMovie[]>(generateMockHistory());
+    const [history, setHistory] = useState<WatchedMovie[]>([]);
     const [sortBy, setSortBy] = useState<'recent' | 'title' | 'rating'>('recent');
+
+    useEffect(() => {
+        setHistory(generateMockHistory());
+    }, []);
 
     const sortedHistory = [...history].sort((a, b) => {
         switch (sortBy) {

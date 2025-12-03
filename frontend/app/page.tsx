@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import MovieCard from '@/components/MovieCard';
 import { Play, TrendingUp, Sparkles, ChevronRight } from 'lucide-react';
+import { getRecommendations } from '@/utils/api';
 
 export default function Home() {
     const [featuredMovies, setFeaturedMovies] = useState<any[]>([]);
@@ -12,12 +13,32 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Simulate loading movies (replace with actual API calls later)
-        setTimeout(() => {
-            setFeaturedMovies(generateMockMovies(6));
-            setTrendingMovies(generateMockMovies(12));
-            setLoading(false);
-        }, 1000);
+        async function loadMovies() {
+            try {
+                // Fetch personalized recommendations for user 1 (hardcoded for demo)
+                // We pass a few movie IDs as history to get relevant recs
+                const history = ['1', '2', '3']; // Toy Story, Jumanji, Grumpier Old Men
+                const recs = await getRecommendations(1, history);
+
+                if (recs && recs.length > 0) {
+                    setFeaturedMovies(recs.slice(0, 6));
+                    setTrendingMovies(recs.slice(6, 18));
+                } else {
+                    // Fallback if API fails or returns empty
+                    console.log("Using fallback data");
+                    setFeaturedMovies(generateMockMovies(6));
+                    setTrendingMovies(generateMockMovies(12));
+                }
+            } catch (error) {
+                console.error("Failed to load movies:", error);
+                setFeaturedMovies(generateMockMovies(6));
+                setTrendingMovies(generateMockMovies(12));
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadMovies();
     }, []);
 
     const handleWatch = (movieId: string) => {

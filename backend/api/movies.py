@@ -4,10 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from backend.db.database import get_db
-from backend.db.models import Movie
-from backend.db.schemas import MovieResponse, MovieCreate
-from backend.services.omdb_service import fetch_movie_from_omdb
+from db.database import get_db
+from db.models import Movie
+from db.schemas import MovieResponse, MovieCreate
+from services.omdb_service import fetch_movie_from_omdb
 
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
