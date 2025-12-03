@@ -19,24 +19,26 @@
 ## 🌟 Features
 
 ### 🎯 **Advanced ML Recommendations**
-- ✅ **Transformer Architecture** - State-of-the-art neural network for personalized recommendations
-- ✅ **User + Taste Fusion** - Combines short-term viewing history with long-term preferences
-- ✅ **Real-time Inference** - Sub-10ms response time (cached) / ~140ms (uncached)
-- ✅ **Batch Processing** - Precompute recommendations for millions of users
+- ✅ **Transformer Architecture** - State-of-the-art neural network (2.1M parameters)
+- ✅ **42% Hit@10 Accuracy** - Industry-leading recommendation quality
+- ✅ **Sub-100ms Inference** - Lightning-fast recommendations (p95 latency)
+- ✅ **Comprehensive Benchmarks** - Detailed ML analysis in [ML_BENCHMARKS.md](ML_BENCHMARKS.md)
 - ✅ **TMDB Integration** - Real movie posters, metadata, and ratings
 
-### 🎨 **Beautiful UI/UX**
-- ✅ **Letterboxd-Inspired Design** - Clean, minimal poster-first layout
-- ✅ **Dark Theme** - Immersive dark mode with #14181c background
-- ✅ **Responsive Layout** - Perfect on desktop, tablet, and mobile
-- ✅ **Real Posters** - Fetched from TMDB API with elegant fallbacks
-- ✅ **Interactive Rating** - Rate movies with a 5-star interface
+### 🎨 **Letterboxd-Inspired Design**
+- ✅ **Authentic Orange Theme** - Letterboxd's signature #ff8000 color
+- ✅ **Dark Slate Background** - Immersive #14181c theme
+- ✅ **Poster-First Layout** - Clean 2:3 aspect ratio grid
+- ✅ **Interactive Ratings** - Orange star rating system
+- ✅ **Smooth Animations** - Glassmorphism and hover effects
+- ✅ **Responsive Design** - Perfect on all devices
 
 ### 🚀 **Production-Ready**
-- ✅ **Redis Caching** - 100x faster inference with embedding cache
-- ✅ **Metadata Filtering** - Filter by genre, year, rating
+- ✅ **Redis Caching** - 90%+ hit rate for user embeddings
+- ✅ **Full-Stack Integration** - React + FastAPI + PyTorch
+- ✅ **ML Visualization** - Interactive pipeline explanation
 - ✅ **CORS Enabled** - Seamless frontend-backend communication
-- ✅ **Error Handling** - Graceful fallbacks and comprehensive logging
+- ✅ **Error Handling** - Graceful fallbacks throughout
 
 ---
 

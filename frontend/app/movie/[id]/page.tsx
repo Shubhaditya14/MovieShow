@@ -171,7 +171,7 @@ export default function MovieDetailsPage() {
                                     >
                                         <Star
                                             className={`w-6 h-6 ${star <= (hoverRating || userRating)
-                                                ? 'fill-[#00c030] text-[#00c030]'
+                                                ? 'fill-[#ff8000] text-[#ff8000]'
                                                 : 'text-gray-600'
                                                 }`}
                                         />
@@ -179,12 +179,12 @@ export default function MovieDetailsPage() {
                                 ))}
                             </div>
                             {ratingMessage && (
-                                <div className="text-sm text-[#00c030] font-medium animate-pulse">
+                                <div className="text-sm text-[#ff8000] font-medium animate-pulse">
                                     {ratingMessage}
                                 </div>
                             )}
 
-                            <button className="flex items-center gap-2 bg-[#00c030] hover:bg-[#00e054] text-black px-6 py-2 rounded-md font-bold transition-colors">
+                            <button className="flex items-center gap-2 bg-[#ff8000] hover:bg-[#ff9500] text-white px-6 py-2 rounded-md font-bold transition-colors">
                                 <Play className="w-4 h-4 fill-current" />
                                 Watch
                             </button>
@@ -211,7 +211,7 @@ export default function MovieDetailsPage() {
                             <div>
                                 <h4 className="text-xs text-gray-500 uppercase font-bold mb-1">Rating</h4>
                                 <div className="text-xl font-bold text-white flex items-center gap-1">
-                                    <Star className="w-4 h-4 text-[#00c030] fill-current" />
+                                    <Star className="w-4 h-4 text-[#ff8000] fill-current" />
                                     {movie.rating ? movie.rating.toFixed(1) : 'N/A'}
                                 </div>
                             </div>

@@ -21,7 +21,7 @@ export default function Navigation() {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2 group">
-                        <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-red-700 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#ff8000] to-[#ff9500] rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform">
                             <Film className="w-6 h-6 text-white" />
                         </div>
                         <span className="text-2xl font-bold gradient-text hidden sm:block">
@@ -40,8 +40,8 @@ export default function Navigation() {
                                     key={item.href}
                                     href={item.href}
                                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${isActive
-                                        ? 'bg-red-600 text-white'
-                                        : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                                        ? 'bg-[#ff8000] text-white'
+                                        : 'text-[#9ab] hover:bg-white/10 hover:text-white'
                                         }`}
                                 >
                                     <Icon className="w-5 h-5" />

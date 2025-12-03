@@ -23,7 +23,7 @@ export default function MovieCard({ id, title, posterUrl, rating, year }: MovieC
 
     return (
         <Link href={`/movie/${id}`} className="block group">
-            <div className="poster-container relative w-full bg-[#1c2228] rounded overflow-hidden shadow-lg group-hover:ring-2 ring-[#00c030] transition-all duration-200">
+            <div className="poster-container relative w-full bg-[#1c2228] rounded overflow-hidden shadow-lg group-hover:ring-2 ring-[#ff8000] transition-all duration-200">
                 {posterUrl ? (
                     <img
                         src={posterUrl}
@@ -52,7 +52,7 @@ export default function MovieCard({ id, title, posterUrl, rating, year }: MovieC
                     <h3 className="font-bold text-white text-sm mb-2 line-clamp-3">{title}</h3>
                     {year && <span className="text-xs text-gray-300 mb-2">{year}</span>}
                     {rating && (
-                        <div className="flex items-center gap-1 text-[#00c030]">
+                        <div className="flex items-center gap-1 text-[#ff8000]">
                             <Star className="w-3 h-3 fill-current" />
                             <span className="text-xs font-bold">{rating.toFixed(1)}</span>
                         </div>
