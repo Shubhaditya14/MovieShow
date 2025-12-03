@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Film, Home, History, User, TrendingUp } from 'lucide-react';
+import { Film, Home, History, User, TrendingUp, Brain } from 'lucide-react';
 
 export default function Navigation() {
     const pathname = usePathname();
@@ -10,7 +10,7 @@ export default function Navigation() {
     const navItems = [
         { href: '/', label: 'Home', icon: Home },
         { href: '/discover', label: 'Discover', icon: TrendingUp },
-        { href: '/movies', label: 'Movies', icon: Film },
+        { href: '/engine', label: 'Engine', icon: Brain },
         { href: '/history', label: 'History', icon: History },
         { href: '/profile', label: 'Profile', icon: User },
     ];
@@ -40,8 +40,8 @@ export default function Navigation() {
                                     key={item.href}
                                     href={item.href}
                                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${isActive
-                                            ? 'bg-red-600 text-white'
-                                            : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                                        ? 'bg-red-600 text-white'
+                                        : 'text-gray-300 hover:bg-white/10 hover:text-white'
                                         }`}
                                 >
                                     <Icon className="w-5 h-5" />

@@ -73,8 +73,8 @@ export default function DiscoverPage() {
                         <button
                             onClick={() => setShowFilters(!showFilters)}
                             className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all ${showFilters || selectedGenres.length > 0 || selectedYear
-                                    ? 'bg-red-600 text-white'
-                                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                                ? 'bg-red-600 text-white'
+                                : 'bg-white/10 text-gray-300 hover:bg-white/20'
                                 }`}
                         >
                             <Filter className="w-5 h-5" />
@@ -109,8 +109,8 @@ export default function DiscoverPage() {
                                             key={genre}
                                             onClick={() => toggleGenre(genre)}
                                             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedGenres.includes(genre)
-                                                    ? 'bg-red-600 text-white'
-                                                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                                                ? 'bg-red-600 text-white'
+                                                : 'bg-white/10 text-gray-300 hover:bg-white/20'
                                                 }`}
                                         >
                                             {genre}
@@ -150,15 +150,17 @@ export default function DiscoverPage() {
                         {filteredMovies.map(movie => (
                             <MovieCard
                                 key={movie.movie_id}
-                                movie={movie}
-                                onWatch={(id) => console.log('Watch:', id)}
-                                onLike={(id) => console.log('Like:', id)}
+                                id={movie.movie_id}
+                                title={movie.title}
+                                posterUrl={movie.poster_url}
+                                rating={movie.rating}
+                                year={movie.year?.toString()}
                             />
                         ))}
                     </div>
                 ) : (
                     <div className="text-center py-20">
-                        <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                        <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[#1c2228] flex items-center justify-center">
                             <Search className="w-10 h-10 text-gray-500" />
                         </div>
                         <h3 className="text-xl font-semibold text-white mb-2">No movies found</h3>
@@ -170,24 +172,46 @@ export default function DiscoverPage() {
     );
 }
 
-// Mock data generator
+// Mock data generator with real posters
 function generateMockMovies(count: number) {
-    const genres = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Thriller', 'Romance'];
-    const titles = [
-        'The Shawshank Redemption', 'The Godfather', 'The Dark Knight', 'Pulp Fiction',
-        'Forrest Gump', 'Inception', 'Fight Club', 'The Matrix', 'Goodfellas',
-        'The Silence of the Lambs', 'Interstellar', 'Parasite', 'Gladiator',
-        'The Departed', 'Whiplash', 'The Prestige', 'Memento', 'The Lion King',
-        'Saving Private Ryan', 'The Green Mile', 'The Usual Suspects', 'Se7en',
-        'City of God', 'Spirited Away'
+    const movies = [
+        { title: 'The Shawshank Redemption', id: '318', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg' },
+        { title: 'The Godfather', id: '858', year: 1972, poster: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg' },
+        { title: 'The Dark Knight', id: '58559', year: 2008, poster: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' },
+        { title: 'Pulp Fiction', id: '296', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg' },
+        { title: 'Forrest Gump', id: '356', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg' },
+        { title: 'Inception', id: '27205', year: 2010, poster: 'https://image.tmdb.org/t/p/w500/9gk7admal4ZLvd9Xw1Yy8g0w9TR.jpg' },
+        { title: 'Fight Club', id: '550', year: 1999, poster: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' },
+        { title: 'The Matrix', id: '2571', year: 1999, poster: 'https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg' },
+        { title: 'Goodfellas', id: '769', year: 1990, poster: 'https://image.tmdb.org/t/p/w500/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg' },
+        { title: 'The Silence of the Lambs', id: '593', year: 1991, poster: 'https://image.tmdb.org/t/p/w500/rplLJ2hPcOQmkFhTqUte0MkEaO2.jpg' },
+        { title: 'Interstellar', id: '157336', year: 2014, poster: 'https://image.tmdb.org/t/p/w500/gEU2QniL6C8zt75SS96RoSyJp8.jpg' },
+        { title: 'Parasite', id: '496243', year: 2019, poster: 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg' },
+        { title: 'Gladiator', id: '98', year: 2000, poster: 'https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg' },
+        { title: 'The Departed', id: '1422', year: 2006, poster: 'https://image.tmdb.org/t/p/w500/nT97ifVT2J1yMQmeq20Qblg6qT.jpg' },
+        { title: 'Whiplash', id: '244786', year: 2014, poster: 'https://image.tmdb.org/t/p/w500/7fn624j5g3iRYBxXn7RPyG24DQU.jpg' },
+        { title: 'The Prestige', id: '1124', year: 2006, poster: 'https://image.tmdb.org/t/p/w500/tRNlZbgNCNOpLpbPEz5L8G8oa0j.jpg' },
+        { title: 'Memento', id: '77', year: 2000, poster: 'https://image.tmdb.org/t/p/w500/yuNs09hvpHBY45slPW237RHXVf.jpg' },
+        { title: 'The Lion King', id: '8587', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/sKCr78MXSLixwmZ8DyJLrpMsdP5.jpg' },
+        { title: 'Saving Private Ryan', id: '857', year: 1998, poster: 'https://image.tmdb.org/t/p/w500/uqx37cS8cpHg8U35f9U5IBlrCV3.jpg' },
+        { title: 'The Green Mile', id: '497', year: 1999, poster: 'https://image.tmdb.org/t/p/w500/velWPhVMQeQKcxggNEU8YmIo52R.jpg' },
+        { title: 'The Usual Suspects', id: '629', year: 1995, poster: 'https://image.tmdb.org/t/p/w500/bUP53TEVewE1zzMYG48CD4P17M1.jpg' },
+        { title: 'Se7en', id: '807', year: 1995, poster: 'https://image.tmdb.org/t/p/w500/69Sns8WoET6CfaYlIkHZPXSbFMv.jpg' },
+        { title: 'City of God', id: '598', year: 2002, poster: 'https://image.tmdb.org/t/p/w500/k7eYdWqYQyPqrKDIsp8k6dZGdei.jpg' },
+        { title: 'Spirited Away', id: '129', year: 2001, poster: 'https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg' }
     ];
 
-    return Array.from({ length: count }, (_, i) => ({
-        movie_id: `${i + 1}`,
-        title: titles[i % titles.length],
-        genres: [genres[Math.floor(Math.random() * genres.length)], genres[Math.floor(Math.random() * genres.length)]],
-        year: 1990 + Math.floor(Math.random() * 35),
-        rating: 7 + Math.random() * 3,
-        poster_url: `https://via.placeholder.com/300x450/1f1f1f/ffffff?text=${encodeURIComponent(titles[i % titles.length])}`,
-    }));
+    const genres = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Thriller', 'Romance'];
+
+    return Array.from({ length: count }, (_, i) => {
+        const movie = movies[i % movies.length];
+        return {
+            movie_id: movie.id,
+            title: movie.title,
+            genres: [genres[Math.floor(Math.random() * genres.length)], genres[Math.floor(Math.random() * genres.length)]],
+            year: movie.year,
+            rating: 7 + Math.random() * 3,
+            poster_url: movie.poster,
+        };
+    });
 }

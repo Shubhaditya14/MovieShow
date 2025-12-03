@@ -1,0 +1,89 @@
+================================================================================
+TESTING MOVIE RECOMMENDATION ENGINE
+================================================================================
+
+[1/4] Loading trained model...
+Loading model on: mps
+Model loaded successfully.
+✓ Model loaded in 0.47s
+
+[2/4] Loading movie metadata...
+✓ Loaded 27278 movie titles
+
+[3/4] Running test cases...
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+TEST CASE 1: Sci-Fi Fan
+Description: User who loves Star Wars
+
+Watch History:
+  • Toy Story (1995)
+  • Star Wars: Episode IV - A New Hope (1977)
+  • Star Wars: Episode VI - Return of the Jedi (1983)
+
+📊 Recommendations (generated in 444.2ms):
+   1. Shawshank Redemption, The (1994)                             (score: 6.620)
+   2. Star Wars: Episode IV - A New Hope (1977)                    (score: 6.361)
+   3. Silence of the Lambs, The (1991)                             (score: 6.154)
+   4. Star Wars: Episode VI - Return of the Jedi (1983)            (score: 6.128)
+   5. Schindler's List (1993)                                      (score: 6.103)
+   6. Toy Story (1995)                                             (score: 6.036)
+   7. Twelve Monkeys (a.k.a. 12 Monkeys) (1995)                    (score: 5.973)
+   8. Braveheart (1995)                                            (score: 5.972)
+   9. Usual Suspects, The (1995)                                   (score: 5.895)
+  10. Godfather, The (1972)                                        (score: 5.799)
+
+────────────────────────────────────────────────────────────────────────────────
+TEST CASE 2: Drama Lover
+Description: User who loves classic dramas
+
+Watch History:
+  • Shawshank Redemption, The (1994)
+  • Godfather, The (1972)
+  • Schindler's List (1993)
+
+📊 Recommendations (generated in 9.3ms):
+   1. Shawshank Redemption, The (1994)                             (score: 6.147)
+   2. Schindler's List (1993)                                      (score: 6.047)
+   3. Silence of the Lambs, The (1991)                             (score: 6.033)
+   4. Godfather, The (1972)                                        (score: 5.686)
+   5. Casablanca (1942)                                            (score: 5.611)
+   6. Usual Suspects, The (1995)                                   (score: 5.592)
+   7. Pulp Fiction (1994)                                          (score: 5.538)
+   8. Princess Bride, The (1987)                                   (score: 5.465)
+   9. Star Wars: Episode IV - A New Hope (1977)                    (score: 5.442)
+  10. One Flew Over the Cuckoo's Nest (1975)                       (score: 5.342)
+
+────────────────────────────────────────────────────────────────────────────────
+TEST CASE 3: Action Enthusiast
+Description: User who loves action/fantasy
+
+Watch History:
+  • Matrix, The (1999)
+  • Lord of the Rings: The Fellowship of the Ring, The (2001)
+  • Lord of the Rings: The Two Towers, The (2002)
+
+📊 Recommendations (generated in 8.8ms):
+   1. Shawshank Redemption, The (1994)                             (score: 5.815)
+   2. Matrix, The (1999)                                           (score: 5.777)
+   3. Lord of the Rings: The Fellowship of the Ring, The (2001)    (score: 5.746)
+   4. Silence of the Lambs, The (1991)                             (score: 5.537)
+   5. Usual Suspects, The (1995)                                   (score: 5.533)
+   6. Fight Club (1999)                                            (score: 5.514)
+   7. Terminator 2: Judgment Day (1991)                            (score: 5.456)
+   8. Braveheart (1995)                                            (score: 5.436)
+   9. Lord of the Rings: The Return of the King, The (2003)        (score: 5.399)
+  10. Star Wars: Episode VI - Return of the Jedi (1983)            (score: 5.332)
+
+================================================================================
+[4/4] BENCHMARK RESULTS
+================================================================================
+Total test cases: 3
+Average inference time: 154.1ms
+Min inference time: 8.8ms
+Max inference time: 444.2ms
+Throughput: ~6.5 requests/second
+
+✓ All tests completed successfully!
+================================================================================

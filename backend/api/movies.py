@@ -1,60 +1,56 @@
-# backend/api/movies.py
-
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-
-from db.database import get_db
-from db.models import Movie
-from db.schemas import MovieResponse, MovieCreate
-from services.omdb_service import fetch_movie_from_omdb
-
+from fastapi import APIRouter, HTTPException
+from services.tmdb import tmdb_service
+from utils.data_loader import get_movie_title, load_movie_titles
+import re
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
 
+@router.get("/{movie_id}")
+async def get_movie_details(movie_id: str):
+    # Try to get title from our CSV
+    title = get_movie_title(movie_id)
+    
+    # If movie not in our database, check if it's a known TMDB ID
+    # For demo purposes, we'll use some hardcoded mappings
+    tmdb_fallback = {
+        "318": "The Shawshank Redemption (1994)",
+        "858": "The Godfather (1972)",
+        "58559": "The Dark Knight (2008)",
+        "296": "Pulp Fiction (1994)",
+        "356": "Forrest Gump (1994)",
+        "27205": "Inception (2010)",
+        "550": "Fight Club (1999)",
+        "2571": "The Matrix (1999)",
+        "769": "Goodfellas (1990)",
+        "593": "The Silence of the Lambs (1991)",
+        "157336": "Interstellar (2014)",
+        "496243": "Parasite (2019)",
+    }
+    
+    # If not in our CSV, try the fallback
+    if title == f"Movie {movie_id}" and movie_id in tmdb_fallback:
+        title = tmdb_fallback[movie_id]
+    
+    # Extract year from title if present "Toy Story (1995)"
+    year = None
+    clean_title = title
+    match = re.search(r'\((\d{4})\)', title)
+    if match:
+        year = int(match.group(1))
+        clean_title = re.sub(r'\(\d{4}\)', '', title).strip()
 
-# ---------------------------
-# Search (OMDb only)
-# ---------------------------
-@router.get("/search")
-async def search_movies(query: str):
-    data = await fetch_movie_from_omdb(title=query)
-    return data   # send raw OMDb search result
-
-
-# ---------------------------
-# Get Movie Details (DB + OMDb fallback)
-# ---------------------------
-@router.get("/{movie_id}", response_model=MovieResponse)
-async def get_movie(movie_id: int, db: AsyncSession = Depends(get_db)):
-
-    result = await db.execute(
-        select(Movie).where(Movie.movie_id == movie_id)
-    )
-    movie = result.scalar_one_or_none()
-
-    if movie:
-        return movie
-
-    # If not in DB, fetch from OMDb
-    try:
-        omdb_data = await fetch_movie_from_omdb(imdb_id=f"tt{movie_id}")
-    except:
-        raise HTTPException(404, "Movie not found")
-
-    # Insert into DB
-    new_movie = Movie(
-        movie_id=movie_id,
-        title=omdb_data.get("Title"),
-        genres=omdb_data.get("Genre"),
-        poster_url=omdb_data.get("Poster"),
-        description=omdb_data.get("Plot"),
-        release_year=int(omdb_data.get("Year", 0)),
-        metadata_json=omdb_data,
-    )
-
-    db.add(new_movie)
-    await db.commit()
-    await db.refresh(new_movie)
-
-    return new_movie
+    # Fetch details from TMDB
+    tmdb_data = await tmdb_service.get_movie_details(clean_title, year)
+    
+    return {
+        "movie_id": movie_id,
+        "title": title,
+        "clean_title": clean_title,
+        "year": year,
+        "poster_url": tmdb_data.get("poster_url"),
+        "backdrop_url": tmdb_data.get("backdrop_url"),
+        "overview": tmdb_data.get("overview"),
+        "rating": tmdb_data.get("vote_average"),
+        "release_date": tmdb_data.get("release_date"),
+        "genres": ["Action", "Adventure"] # Placeholder, ideally from CSV or TMDB
+    }

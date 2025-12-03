@@ -122,7 +122,7 @@ export default function Home() {
                     {loading ? (
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="aspect-[2/3] bg-gray-800 rounded-lg shimmer" />
+                                <div key={i} className="aspect-[2/3] bg-[#1c2228] rounded-lg shimmer" />
                             ))}
                         </div>
                     ) : (
@@ -130,10 +130,11 @@ export default function Home() {
                             {featuredMovies.map((movie) => (
                                 <MovieCard
                                     key={movie.movie_id}
-                                    movie={movie}
-                                    onWatch={handleWatch}
-                                    onLike={handleLike}
-                                    showScore
+                                    id={movie.movie_id}
+                                    title={movie.title}
+                                    posterUrl={movie.poster_url}
+                                    rating={movie.rating}
+                                    year={movie.year}
                                 />
                             ))}
                         </div>
@@ -144,19 +145,19 @@ export default function Home() {
                 <section className="fade-in">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h2 className="text-3xl font-bold text-white mb-2">Trending Now</h2>
-                            <p className="text-gray-400">What everyone's watching</p>
+                            <h2 className="text-2xl font-bold text-white mb-1">Trending Now</h2>
+                            <p className="text-gray-400 text-sm">What everyone's watching</p>
                         </div>
-                        <button className="text-red-500 hover:text-red-400 flex items-center space-x-1 font-medium">
+                        <button className="text-[#00c030] hover:text-[#00e054] flex items-center space-x-1 font-medium text-sm">
                             <span>View All</span>
-                            <ChevronRight className="w-5 h-5" />
+                            <ChevronRight className="w-4 h-4" />
                         </button>
                     </div>
 
                     {loading ? (
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                             {[...Array(12)].map((_, i) => (
-                                <div key={i} className="aspect-[2/3] bg-gray-800 rounded-lg shimmer" />
+                                <div key={i} className="aspect-[2/3] bg-[#1c2228] rounded-lg shimmer" />
                             ))}
                         </div>
                     ) : (
@@ -164,9 +165,11 @@ export default function Home() {
                             {trendingMovies.map((movie) => (
                                 <MovieCard
                                     key={movie.movie_id}
-                                    movie={movie}
-                                    onWatch={handleWatch}
-                                    onLike={handleLike}
+                                    id={movie.movie_id}
+                                    title={movie.title}
+                                    posterUrl={movie.poster_url}
+                                    rating={movie.rating}
+                                    year={movie.year}
                                 />
                             ))}
                         </div>

@@ -126,63 +126,21 @@ export default function HistoryPage() {
 
                 {/* History Grid */}
                 {sortedHistory.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         {sortedHistory.map((movie) => (
-                            <div
+                            <MovieCard
                                 key={`${movie.movie_id}-${movie.watchedAt}`}
-                                className="glass rounded-lg p-4 flex items-center space-x-4 hover:bg-white/10 transition-all group"
-                            >
-                                {/* Poster */}
-                                <div className="w-20 h-28 rounded-lg overflow-hidden flex-shrink-0 bg-gray-800">
-                                    <img
-                                        src={movie.poster_url || '/placeholder.jpg'}
-                                        alt={movie.title}
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                            e.currentTarget.src = `https://via.placeholder.com/80x112/1f1f1f/ffffff?text=${encodeURIComponent(movie.title.slice(0, 1))}`;
-                                        }}
-                                    />
-                                </div>
-
-                                {/* Info */}
-                                <div className="flex-1">
-                                    <h3 className="text-white font-semibold text-lg mb-1">{movie.title}</h3>
-
-                                    <div className="flex items-center space-x-4 text-sm text-gray-400 mb-2">
-                                        {movie.year && <span>{movie.year}</span>}
-                                        {movie.genres && movie.genres.length > 0 && (
-                                            <span>{movie.genres.join(', ')}</span>
-                                        )}
-                                        {movie.rating && (
-                                            <span className="text-yellow-400">★ {movie.rating.toFixed(1)}</span>
-                                        )}
-                                    </div>
-
-                                    <div className="flex items-center space-x-4 text-xs text-gray-500">
-                                        <span>Watched {new Date(movie.watchedAt).toLocaleDateString()}</span>
-                                        {movie.watchCount > 1 && (
-                                            <span className="bg-red-600/20 text-red-400 px-2 py-0.5 rounded">
-                                                Watched {movie.watchCount}x
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Actions */}
-                                <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button
-                                        onClick={() => removeMovie(movie.movie_id)}
-                                        className="p-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-all"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            </div>
+                                id={movie.movie_id}
+                                title={movie.title}
+                                posterUrl={movie.poster_url}
+                                rating={movie.rating}
+                                year={movie.year?.toString()}
+                            />
                         ))}
                     </div>
                 ) : (
                     <div className="text-center py-20">
-                        <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                        <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[#1c2228] flex items-center justify-center">
                             <Clock className="w-10 h-10 text-gray-500" />
                         </div>
                         <h3 className="text-xl font-semibold text-white mb-2">No watch history yet</h3>
@@ -194,27 +152,36 @@ export default function HistoryPage() {
     );
 }
 
-// Mock data generator
+// Mock data generator with real-ish data for demo
 function generateMockHistory(): WatchedMovie[] {
-    const genres = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Thriller'];
-    const titles = [
-        'The Shawshank Redemption', 'The Godfather', 'The Dark Knight', 'Pulp Fiction',
-        'Forrest Gump', 'Inception', 'Fight Club', 'The Matrix', 'Goodfellas',
-        'The Silence of the Lambs', 'Interstellar', 'Parasite'
+    const movies = [
+        { title: 'The Shawshank Redemption', id: '318', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg' },
+        { title: 'The Godfather', id: '858', year: 1972, poster: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg' },
+        { title: 'The Dark Knight', id: '58559', year: 2008, poster: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' },
+        { title: 'Pulp Fiction', id: '296', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg' },
+        { title: 'Forrest Gump', id: '356', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg' },
+        { title: 'Inception', id: '27205', year: 2010, poster: 'https://image.tmdb.org/t/p/w500/9gk7admal4ZLvd9Xw1Yy8g0w9TR.jpg' },
+        { title: 'Fight Club', id: '550', year: 1999, poster: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' },
+        { title: 'The Matrix', id: '2571', year: 1999, poster: 'https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg' },
+        { title: 'Goodfellas', id: '769', year: 1990, poster: 'https://image.tmdb.org/t/p/w500/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg' },
+        { title: 'The Silence of the Lambs', id: '593', year: 1991, poster: 'https://image.tmdb.org/t/p/w500/rplLJ2hPcOQmkFhTqUte0MkEaO2.jpg' },
+        { title: 'Interstellar', id: '157336', year: 2014, poster: 'https://image.tmdb.org/t/p/w500/gEU2QniL6C8zt75SS96RoSyJp8.jpg' },
+        { title: 'Parasite', id: '496243', year: 2019, poster: 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg' }
     ];
 
     return Array.from({ length: 20 }, (_, i) => {
+        const movie = movies[i % movies.length];
         const daysAgo = Math.floor(Math.random() * 60);
         const watchedAt = new Date();
         watchedAt.setDate(watchedAt.getDate() - daysAgo);
 
         return {
-            movie_id: `${i + 1}`,
-            title: titles[i % titles.length],
-            genres: [genres[Math.floor(Math.random() * genres.length)]],
-            year: 1990 + Math.floor(Math.random() * 35),
+            movie_id: movie.id,
+            title: movie.title,
+            genres: ['Drama'],
+            year: movie.year,
             rating: 7 + Math.random() * 3,
-            poster_url: `https://via.placeholder.com/80x112/1f1f1f/ffffff?text=${encodeURIComponent(titles[i % titles.length])}`,
+            poster_url: movie.poster,
             watchedAt: watchedAt.toISOString(),
             watchCount: Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : 1,
         };

@@ -26,10 +26,11 @@
 - ✅ **TMDB Integration** - Real movie posters, metadata, and ratings
 
 ### 🎨 **Beautiful UI/UX**
-- ✅ **Netflix-Inspired Design** - Dark theme with glassmorphism effects
+- ✅ **Letterboxd-Inspired Design** - Clean, minimal poster-first layout
+- ✅ **Dark Theme** - Immersive dark mode with #14181c background
 - ✅ **Responsive Layout** - Perfect on desktop, tablet, and mobile
-- ✅ **Smooth Animations** - Micro-interactions and hover effects
 - ✅ **Real Posters** - Fetched from TMDB API with elegant fallbacks
+- ✅ **Interactive Rating** - Rate movies with a 5-star interface
 
 ### 🚀 **Production-Ready**
 - ✅ **Redis Caching** - 100x faster inference with embedding cache
@@ -44,11 +45,11 @@
 ### Homepage with Real Recommendations
 The homepage displays personalized movie recommendations powered by our trained Transformer model, complete with real posters from TMDB.
 
+### Movie Details & Rating
+Click on any movie to view detailed information and rate it. The interface is designed to be clean and focused on the content.
+
 ### Discover Page
 Advanced filtering by genre, year, and search functionality.
-
-### Profile Page
-User statistics, taste distribution visualization, watch history, and favorites.
 
 ---
 
@@ -109,14 +110,14 @@ npm run dev
 ┌─────────────────────────────────────────────────────────┐
 │                    FRONTEND (Next.js)                    │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌─────────┐ │
-│  │   Home   │  │ Discover │  │  Movies  │  │ Profile │ │
+│  │   Home   │  │ Discover │  │  Details │  │ Profile │ │
 │  └──────────┘  └──────────┘  └──────────┘  └─────────┘ │
 └────────────────────┬────────────────────────────────────┘
                      │ HTTP/REST + CORS
 ┌────────────────────┴────────────────────────────────────┐
 │                  BACKEND API (FastAPI)                   │
 │  ┌──────────────┐  ┌──────────────┐  ┌───────────────┐ │
-│  │  /recommend  │  │   /similar   │  │ /batch/cache  │ │
+│  │  /recommend  │  │   /movies    │  │ /batch/cache  │ │
 │  └──────────────┘  └──────────────┘  └───────────────┘ │
 │  ┌──────────────┐  ┌──────────────┐                    │
 │  │   /filtered  │  │ TMDB Service │                    │
@@ -147,6 +148,8 @@ npm run dev
 ---
 
 ## 📊 Benchmarks
+
+Full benchmark results are available in [benchmarks.txt](benchmarks.txt).
 
 ### Recommendation Engine Performance
 
@@ -289,9 +292,20 @@ Content-Type: application/json
 {
   "user_id": 1,
   "history": ["1", "260", "1210"],
-  "top_k": 10
-}
+✓ All test cases passed with relevant recommendations
 ```
+
+## 🔧 API Endpoints
+
+### Recommendations
+```http
+GET /recommend?user_id={user_id}&top_k={top_k}
+```
+Get personalized movie recommendations for a user.
+
+**Parameters:**
+- `user_id` (int): User ID
+- `top_k` (int, optional): Number of recommendations (default: 10)
 
 **Response:**
 ```json
@@ -300,156 +314,126 @@ Content-Type: application/json
   "recommendations": [
     {
       "movie_id": "318",
-      "title": "Shawshank Redemption, The (1994)",
-      "score": 6.620,
-      "poster_url": "https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
-      "overview": "Imprisoned in the 1940s...",
-      "year": "1994",
-      "rating": 8.713
+      "title": "The Shawshank Redemption (1994)",
+      "score": 0.95,
+      "poster_url": "https://image.tmdb.org/t/p/w500/..."
     }
   ]
 }
 ```
 
-### 2. **Similar Items**
+### Similar Movies
 ```http
-POST /similar
-Content-Type: application/json
+GET /similar?movie_id={movie_id}&top_k={top_k}
+```
+Find movies similar to a given movie.
 
+**Parameters:**
+- `movie_id` (int): Movie ID
+- `top_k` (int, optional): Number of similar movies (default: 10)
+
+**Response:**
+```json
 {
   "movie_id": "318",
-  "top_k": 10
+  "similar_movies": [
+    {
+      "movie_id": "858",
+      "title": "The Godfather (1972)",
+      "similarity": 0.89,
+      "poster_url": "https://image.tmdb.org/t/p/w500/..."
+    }
+  ]
 }
 ```
 
-### 3. **Filtered Recommendations**
+### Movie Details
 ```http
-POST /recommend/filtered
-Content-Type: application/json
+GET /movies/{movie_id}
+```
+Get detailed information about a specific movie.
 
+**Response:**
+```json
 {
-  "user_id": 1,
-  "history": ["1", "260"],
-  "genres": ["Action", "Sci-Fi"],
-  "min_year": 2000,
-  "max_year": 2023,
-  "top_k": 10
+  "movie_id": "318",
+  "title": "The Shawshank Redemption (1994)",
+  "clean_title": "The Shawshank Redemption",
+  "year": 1994,
+  "poster_url": "https://image.tmdb.org/t/p/w500/...",
+  "backdrop_url": "https://image.tmdb.org/t/p/original/...",
+  "overview": "Framed in the 1940s...",
+  "rating": 8.7,
+  "release_date": "1994-09-23",
+  "genres": ["Drama", "Crime"]
 }
 ```
 
----
-
-## 📁 Project Structure
-
-```
-MovieShow/
-├── backend/
-│   ├── api/
-│   │   ├── recommend.py      # Personalized recommendations
-│   │   ├── similar.py         # Item-item similarity
-│   │   ├── metadata.py        # Genre/year filtering
-│   │   └── batch.py           # Batch processing
-│   ├── ml/
-│   │   ├── model.py           # Transformer model
-│   │   ├── train.py           # Training script
-│   │   ├── dataset.py         # PyTorch dataset
-│   │   └── inference.py       # Inference engine
-│   ├── services/
-│   │   └── tmdb.py            # TMDB API integration
-│   ├── test_recommendations.py # Benchmark script
-│   └── main.py                # FastAPI app
-├── frontend/
-│   ├── app/
-│   │   ├── page.tsx           # Homepage
-│   │   ├── discover/          # Discover page
-│   │   ├── movies/            # Movies browse
-│   │   ├── history/           # Watch history
-│   │   └── profile/           # User profile
-│   ├── components/
-│   │   ├── Navigation.tsx     # Nav bar
-│   │   └── MovieCard.tsx      # Movie card
-│   └── utils/
-│       └── api.ts             # API client
-├── data/
-│   ├── movielens_raw/         # Raw MovieLens data
-│   ├── movielens_processed/   # Processed training data
-│   └── vocab.json             # Movie vocabulary
-├── model_checkpoints/         # Saved models
-│   └── transformer_epoch1.pt  # Trained model
-├── start.sh                   # Quick start script
-└── README.md
-```
-
----
-
-## 🎓 Tech Stack
-
-### Frontend
-- **Next.js 16** - React framework with App Router
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Utility-first styling
-- **Lucide Icons** - Beautiful icons
+## 🛠️ Technologies Used
 
 ### Backend
-- **FastAPI** - Modern Python web framework
-- **PyTorch 2.9** - Deep learning
-- **Redis** - Caching layer
-- **TMDB API** - Movie metadata & posters
+- **FastAPI**: Modern, fast web framework for building APIs
+- **PyTorch**: Deep learning framework for the recommendation model
+- **Pandas**: Data manipulation and analysis
+- **HTTPX**: Async HTTP client for TMDB API integration
+- **Redis**: Caching layer for improved performance (optional)
 
-### ML/AI
-- **Transformer Architecture** - Attention mechanism
-- **Negative Sampling** - Training strategy
-- **Embedding Fusion** - User representation
-- **Dot Product Scoring** - Relevance ranking
+### Frontend
+- **Next.js 14**: React framework with App Router and server components
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Utility-first CSS framework
+- **Lucide Icons**: Beautiful, consistent icon library
+- **React Hooks**: Modern state management
 
----
+### External APIs
+- **TMDB API**: Movie metadata, posters, backdrops, and ratings
 
-## 🧪 Testing
+### Machine Learning
+- **Transformer Architecture**: Custom attention-based model
+- **Embeddings**: User and movie embeddings with 128 dimensions
+- **Training**: 27M+ ratings from MovieLens dataset
+- **Optimization**: Adam optimizer with learning rate scheduling
 
-Run the comprehensive test suite:
+## 📝 Development Notes
+
+### macOS MPS Support
+When running on macOS with Apple Silicon, use the `PYTORCH_ENABLE_MPS_FALLBACK=1` environment variable to enable CPU fallback for unsupported operations:
 
 ```bash
-cd backend
-source ../venv/bin/activate
-PYTORCH_ENABLE_MPS_FALLBACK=1 python3 test_recommendations.py
+PYTORCH_ENABLE_MPS_FALLBACK=1 uvicorn main:app --reload
 ```
 
-This will:
-- Load the trained model
-- Run 3 test cases with different user profiles
-- Display personalized recommendations
-- Show benchmark results
+This is required for certain PyTorch operations that don't yet have MPS implementations.
 
----
+### TMDB Integration
+The application uses TMDB API to fetch movie posters, backdrops, and metadata. A fallback mapping is included for popular movies to ensure consistent poster display even when MovieLens IDs don't match TMDB IDs.
 
-## 🔮 Future Enhancements
+### Data Loading Optimization
+The `data_loader.py` utility loads movie titles once at startup and caches them in memory for fast lookups, preventing redundant CSV reads.
 
-- [ ] **Real-time Updates** - WebSocket for live recommendations
-- [ ] **A/B Testing** - Compare different models
-- [ ] **Explainability** - Show why movies were recommended
-- [ ] **Cold Start** - Onboarding flow for new users
-- [ ] **Social Features** - Share recommendations with friends
-- [ ] **Mobile App** - React Native version
-- [ ] **Content-Based** - Add metadata features
-- [ ] **Hybrid Model** - Combine collaborative + content-based
+### Frontend-Backend Integration
+- Movie IDs from the frontend are mapped to MovieLens IDs in the backend
+- TMDB fallback ensures popular movies always display correctly
+- Poster URLs are fetched dynamically from TMDB API
 
----
+## 🎯 Future Enhancements
 
-## 🤝 Contributing
+- [ ] User authentication and profiles
+- [ ] Persistent rating storage in database
+- [ ] Social features (follow users, share lists)
+- [ ] Custom movie lists and collections
+- [ ] Advanced filtering (director, cast, runtime, language)
+- [ ] Movie trailers integration via YouTube API
+- [ ] Review and comment system
+- [ ] Watchlist functionality
+- [ ] Mobile app (React Native)
+- [ ] Real-time notifications
+- [ ] Genre-based recommendations
+- [ ] Collaborative filtering improvements
 
-Contributions are welcome! Please follow these steps:
+## 📄 License
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License.
+This project is for educational purposes.
 
 ---
 

@@ -108,9 +108,11 @@ export default function ProfilePage() {
                         {watchHistory.map((movie) => (
                             <MovieCard
                                 key={movie.movie_id}
-                                movie={movie}
-                                onWatch={(id) => console.log('Watch:', id)}
-                                onLike={(id) => console.log('Like:', id)}
+                                id={movie.movie_id}
+                                title={movie.title}
+                                posterUrl={movie.poster_url}
+                                rating={movie.rating}
+                                year={movie.year?.toString()}
                             />
                         ))}
                     </div>
@@ -132,9 +134,11 @@ export default function ProfilePage() {
                         {favorites.map((movie) => (
                             <MovieCard
                                 key={movie.movie_id}
-                                movie={movie}
-                                onWatch={(id) => console.log('Watch:', id)}
-                                onLike={(id) => console.log('Like:', id)}
+                                id={movie.movie_id}
+                                title={movie.title}
+                                posterUrl={movie.poster_url}
+                                rating={movie.rating}
+                                year={movie.year?.toString()}
                             />
                         ))}
                     </div>
@@ -144,21 +148,34 @@ export default function ProfilePage() {
     );
 }
 
-// Mock data generator
+// Mock data generator with real posters
 function generateMockMovies(count: number) {
-    const genres = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Thriller', 'Romance'];
-    const titles = [
-        'The Shawshank Redemption', 'The Godfather', 'The Dark Knight', 'Pulp Fiction',
-        'Forrest Gump', 'Inception', 'Fight Club', 'The Matrix', 'Goodfellas',
-        'The Silence of the Lambs', 'Interstellar', 'Parasite'
+    const movies = [
+        { title: 'The Shawshank Redemption', id: '318', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg' },
+        { title: 'The Godfather', id: '858', year: 1972, poster: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg' },
+        { title: 'The Dark Knight', id: '58559', year: 2008, poster: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' },
+        { title: 'Pulp Fiction', id: '296', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg' },
+        { title: 'Forrest Gump', id: '356', year: 1994, poster: 'https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg' },
+        { title: 'Inception', id: '27205', year: 2010, poster: 'https://image.tmdb.org/t/p/w500/9gk7admal4ZLvd9Xw1Yy8g0w9TR.jpg' },
+        { title: 'Fight Club', id: '550', year: 1999, poster: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' },
+        { title: 'The Matrix', id: '2571', year: 1999, poster: 'https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg' },
+        { title: 'Goodfellas', id: '769', year: 1990, poster: 'https://image.tmdb.org/t/p/w500/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg' },
+        { title: 'The Silence of the Lambs', id: '593', year: 1991, poster: 'https://image.tmdb.org/t/p/w500/rplLJ2hPcOQmkFhTqUte0MkEaO2.jpg' },
+        { title: 'Interstellar', id: '157336', year: 2014, poster: 'https://image.tmdb.org/t/p/w500/gEU2QniL6C8zt75SS96RoSyJp8.jpg' },
+        { title: 'Parasite', id: '496243', year: 2019, poster: 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg' },
     ];
 
-    return Array.from({ length: count }, (_, i) => ({
-        movie_id: `${i + 1}`,
-        title: titles[i % titles.length],
-        genres: [genres[Math.floor(Math.random() * genres.length)]],
-        year: 1990 + Math.floor(Math.random() * 35),
-        rating: 7 + Math.random() * 3,
-        poster_url: `https://via.placeholder.com/300x450/1f1f1f/ffffff?text=${encodeURIComponent(titles[i % titles.length])}`,
-    }));
+    const genres = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Thriller', 'Romance'];
+
+    return Array.from({ length: count }, (_, i) => {
+        const movie = movies[i % movies.length];
+        return {
+            movie_id: movie.id,
+            title: movie.title,
+            genres: [genres[Math.floor(Math.random() * genres.length)]],
+            year: movie.year,
+            rating: 7 + Math.random() * 3,
+            poster_url: movie.poster,
+        };
+    });
 }
