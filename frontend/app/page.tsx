@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Navigation from '@/components/Navigation';
 import MovieCard from '@/components/MovieCard';
 import { Play, TrendingUp, Sparkles, ChevronRight } from 'lucide-react';
@@ -21,12 +22,12 @@ export default function Home() {
 
     const handleWatch = (movieId: string) => {
         console.log('Watch movie:', movieId);
-        // TODO: Implement watch functionality
+        alert(`Playing movie ${movieId}! (This will connect to your backend API)`);
     };
 
     const handleLike = (movieId: string) => {
         console.log('Like movie:', movieId);
-        // TODO: Implement like functionality
+        alert(`Liked movie ${movieId}! (This will save to your favorites)`);
     };
 
     return (
@@ -65,15 +66,19 @@ export default function Home() {
                     </p>
 
                     <div className="flex items-center justify-center space-x-4">
-                        <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg flex items-center space-x-2 transform hover:scale-105 transition-all">
-                            <Play className="w-5 h-5 fill-current" />
-                            <span>Get Started</span>
-                        </button>
+                        <Link href="/discover">
+                            <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg flex items-center space-x-2 transform hover:scale-105 transition-all">
+                                <Play className="w-5 h-5 fill-current" />
+                                <span>Get Started</span>
+                            </button>
+                        </Link>
 
-                        <button className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-semibold text-lg flex items-center space-x-2 border border-white/20 transform hover:scale-105 transition-all">
-                            <TrendingUp className="w-5 h-5" />
-                            <span>Explore Trending</span>
-                        </button>
+                        <Link href="/movies">
+                            <button className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-semibold text-lg flex items-center space-x-2 border border-white/20 transform hover:scale-105 transition-all">
+                                <TrendingUp className="w-5 h-5" />
+                                <span>Explore Trending</span>
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </div>

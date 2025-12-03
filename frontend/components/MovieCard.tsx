@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Star, Play, Info, Heart } from 'lucide-react';
-import Image from 'next/image';
 
 interface MovieCardProps {
     movie: {
@@ -23,6 +22,20 @@ export default function MovieCard({ movie, onWatch, onLike, showScore = false }:
     const [isHovered, setIsHovered] = useState(false);
     const [imageError, setImageError] = useState(false);
 
+    // Generate a color based on movie title for consistent fallback colors
+    const getColorFromTitle = (title: string) => {
+        const colors = [
+            'from-red-600 to-red-800',
+            'from-blue-600 to-blue-800',
+            'from-purple-600 to-purple-800',
+            'from-green-600 to-green-800',
+            'from-yellow-600 to-yellow-800',
+            'from-pink-600 to-pink-800',
+        ];
+        const index = title.charCodeAt(0) % colors.length;
+        return colors[index];
+    };
+
     const posterUrl = movie.poster_url || '/placeholder-movie.jpg';
 
     return (
@@ -33,20 +46,23 @@ export default function MovieCard({ movie, onWatch, onLike, showScore = false }:
         >
             {/* Movie Poster */}
             <div className="relative aspect-[2/3] bg-gray-800">
-                {!imageError ? (
+                {!imageError && movie.poster_url ? (
                     <img
-                        src={posterUrl}
+                        src={movie.poster_url}
                         alt={movie.title}
                         className="w-full h-full object-cover"
                         onError={() => setImageError(true)}
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+                    <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${getColorFromTitle(movie.title)}`}>
                         <div className="text-center p-4">
-                            <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-red-600/20 flex items-center justify-center">
-                                <Play className="w-8 h-8 text-red-500" />
+                            <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                <Play className="w-8 h-8 text-white fill-white" />
                             </div>
-                            <p className="text-sm font-medium text-gray-300">{movie.title}</p>
+                            <p className="text-sm font-bold text-white px-2 line-clamp-3">{movie.title}</p>
+                            {movie.year && (
+                                <p className="text-xs text-white/80 mt-2">{movie.year}</p>
+                            )}
                         </div>
                     </div>
                 )}
