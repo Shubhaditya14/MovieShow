@@ -1,5 +1,3 @@
-# backend/ml/train.py
-
 import json
 from pathlib import Path
 import random
@@ -9,8 +7,8 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
-from backend.ml.dataset import MovieLensDataset
-from backend.ml.model import TransformerRecModel
+from ml.dataset import MovieLensDataset
+from ml.model import TransformerRecModel
 
 
 # -----------------------------
@@ -22,10 +20,10 @@ NUM_EPOCHS = 3
 NUM_NEGATIVES = 20      # negatives per positive
 LR = 1e-3
 
-DATA_DIR = Path("data")
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
 TRAIN_JSONL_PATH = DATA_DIR / "movielens_processed" / "train.jsonl"
 VOCAB_PATH = DATA_DIR / "vocab.json"
-CHECKPOINT_DIR = Path("model_checkpoints")
+CHECKPOINT_DIR = Path(__file__).parent.parent.parent / "model_checkpoints"
 CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
 
 
