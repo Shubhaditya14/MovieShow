@@ -16,9 +16,9 @@
 
 ---
 
-## 🌟 Features
+## Features
 
-### 🎯 **Advanced ML Recommendations**
+### **Advanced ML Recommendations**
 - **Transformer Architecture** - State-of-the-art neural network (2.1M parameters)
 - **42% Hit@10 Accuracy** - Industry-leading recommendation quality
 - **Sub-100ms Inference** - Lightning-fast recommendations (p95 latency)
@@ -26,7 +26,7 @@
 - **TMDB Integration** - Real movie posters, metadata, and ratings
 
 
-### 🚀 **Production-Ready**
+### **Production-Ready**
 - **Full-Stack Integration** - React + FastAPI + PyTorch
 - **ML Visualization** - Interactive pipeline explanation
 - **CORS Enabled** - Seamless frontend-backend communication
