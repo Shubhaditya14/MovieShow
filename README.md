@@ -1,4 +1,4 @@
-# 🎬 MovieShow - AI-Powered Movie Recommendation System
+# MovieShow - AI-Powered Movie Recommendation System
 
 <div align="center">
 
@@ -19,30 +19,22 @@
 ## 🌟 Features
 
 ### 🎯 **Advanced ML Recommendations**
-- ✅ **Transformer Architecture** - State-of-the-art neural network (2.1M parameters)
-- ✅ **42% Hit@10 Accuracy** - Industry-leading recommendation quality
-- ✅ **Sub-100ms Inference** - Lightning-fast recommendations (p95 latency)
-- ✅ **Comprehensive Benchmarks** - Detailed ML analysis in [ML_BENCHMARKS.md](ML_BENCHMARKS.md)
-- ✅ **TMDB Integration** - Real movie posters, metadata, and ratings
+- **Transformer Architecture** - State-of-the-art neural network (2.1M parameters)
+- **42% Hit@10 Accuracy** - Industry-leading recommendation quality
+- **Sub-100ms Inference** - Lightning-fast recommendations (p95 latency)
+- **Comprehensive Benchmarks** - Detailed ML analysis in [ML_BENCHMARKS.md](ML_BENCHMARKS.md)
+- **TMDB Integration** - Real movie posters, metadata, and ratings
 
-### 🎨 **Letterboxd-Inspired Design**
-- ✅ **Authentic Orange Theme** - Letterboxd's signature #ff8000 color
-- ✅ **Dark Slate Background** - Immersive #14181c theme
-- ✅ **Poster-First Layout** - Clean 2:3 aspect ratio grid
-- ✅ **Interactive Ratings** - Orange star rating system
-- ✅ **Smooth Animations** - Glassmorphism and hover effects
-- ✅ **Responsive Design** - Perfect on all devices
 
 ### 🚀 **Production-Ready**
-- ✅ **Redis Caching** - 90%+ hit rate for user embeddings
-- ✅ **Full-Stack Integration** - React + FastAPI + PyTorch
-- ✅ **ML Visualization** - Interactive pipeline explanation
-- ✅ **CORS Enabled** - Seamless frontend-backend communication
-- ✅ **Error Handling** - Graceful fallbacks throughout
+- **Full-Stack Integration** - React + FastAPI + PyTorch
+- **ML Visualization** - Interactive pipeline explanation
+- **CORS Enabled** - Seamless frontend-backend communication
+- **Error Handling** - Graceful fallbacks throughout
 
 ---
 
-## 📸 Demo
+## Demo
 
 ### Homepage with Real Recommendations
 The homepage displays personalized movie recommendations powered by our trained Transformer model, complete with real posters from TMDB.
@@ -55,7 +47,7 @@ Advanced filtering by genre, year, and search functionality.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.12+
@@ -106,7 +98,7 @@ npm run dev
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -149,7 +141,7 @@ npm run dev
 
 ---
 
-## 📊 Benchmarks
+## Benchmarks
 
 Full benchmark results are available in [benchmarks.txt](benchmarks.txt).
 
@@ -175,7 +167,7 @@ Watch History:
   • Star Wars: Episode IV - A New Hope (1977)
   • Star Wars: Episode VI - Return of the Jedi (1983)
 
-📊 Recommendations (generated in 408.6ms):
+Recommendations (generated in 408.6ms):
    1. Shawshank Redemption, The (1994)                             (score: 6.620)
    2. Star Wars: Episode IV - A New Hope (1977)                    (score: 6.361)
    3. Silence of the Lambs, The (1991)                             (score: 6.154)
@@ -193,7 +185,7 @@ Watch History:
   • Godfather, The (1972)
   • Schindler's List (1993)
 
-📊 Recommendations (generated in 9.8ms):
+Recommendations (generated in 9.8ms):
    1. Shawshank Redemption, The (1994)                             (score: 6.147)
    2. Schindler's List (1993)                                      (score: 6.047)
    3. Silence of the Lambs, The (1991)                             (score: 6.033)
@@ -211,7 +203,7 @@ Watch History:
   • Lord of the Rings: The Fellowship of the Ring, The (2001)
   • Lord of the Rings: The Two Towers, The (2002)
 
-📊 Recommendations (generated in 9.9ms):
+Recommendations (generated in 9.9ms):
    1. Shawshank Redemption, The (1994)                             (score: 5.815)
    2. Matrix, The (1999)                                           (score: 5.777)
    3. Lord of the Rings: The Fellowship of the Ring, The (2001)    (score: 5.746)
@@ -250,7 +242,7 @@ Throughput: ~7.0 requests/second
 
 ---
 
-## 🧠 Model Architecture
+## Model Architecture
 
 ### Transformer Recommendation Model
 
@@ -284,7 +276,7 @@ FINAL_LOSS = 0.97
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### 1. **Personalized Recommendations**
 ```http
@@ -297,7 +289,7 @@ Content-Type: application/json
 ✓ All test cases passed with relevant recommendations
 ```
 
-## 🔧 API Endpoints
+## API Endpoints
 
 ### Recommendations
 ```http
@@ -371,7 +363,7 @@ Get detailed information about a specific movie.
 }
 ```
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 ### Backend
 - **FastAPI**: Modern, fast web framework for building APIs
@@ -396,7 +388,7 @@ Get detailed information about a specific movie.
 - **Training**: 27M+ ratings from MovieLens dataset
 - **Optimization**: Adam optimizer with learning rate scheduling
 
-## 📝 Development Notes
+## Development Notes
 
 ### macOS MPS Support
 When running on macOS with Apple Silicon, use the `PYTORCH_ENABLE_MPS_FALLBACK=1` environment variable to enable CPU fallback for unsupported operations:
@@ -418,20 +410,6 @@ The `data_loader.py` utility loads movie titles once at startup and caches them 
 - TMDB fallback ensures popular movies always display correctly
 - Poster URLs are fetched dynamically from TMDB API
 
-## 🎯 Future Enhancements
-
-- [ ] User authentication and profiles
-- [ ] Persistent rating storage in database
-- [ ] Social features (follow users, share lists)
-- [ ] Custom movie lists and collections
-- [ ] Advanced filtering (director, cast, runtime, language)
-- [ ] Movie trailers integration via YouTube API
-- [ ] Review and comment system
-- [ ] Watchlist functionality
-- [ ] Mobile app (React Native)
-- [ ] Real-time notifications
-- [ ] Genre-based recommendations
-- [ ] Collaborative filtering improvements
 
 ## 📄 License
 
